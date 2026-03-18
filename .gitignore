@@ -1,0 +1,82 @@
+# ==================== Python ====================
+# 字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虚拟环境
+venv/
+env/
+.venv/
+.env/
+
+# IDE 配置
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Pytest 缓存
+.pytest_cache/
+.cache/
+
+# 覆盖报告
+htmlcov/
+.coverage
+.coverage.*
+.coverage.*.*
+
+# ==================== Allure ====================
+# Allure 报告数据 (每次运行都会生成，不需要提交)
+reports/
+allure-results/
+
+# 静态报告 (体积大，不需要提交)
+html-report/
+allure-report/
+
+# ==================== 日志文件 ====================
+logs/
+*.log
+pytest.log
+
+# ==================== 系统文件 ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ==================== 敏感信息 ====================
+# 配置文件中的敏感信息 (如密码、Token)
+config/secrets.yaml
+config/.env
+*.key
+*.pem
+
+# GitHub Actions 缓存
+.github/cache/
+
+# ==================== 临时文件 ====================
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ==================== 构建产物 ====================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ==================== 可选：视频录制 ====================
+# 如果启用 Playwright 视频录制，会产生大量视频文件
+videos/
+test-videos/

@@ -1,0 +1,96 @@
+# .github/workflows/main.yml
+name: 🧪 Auto Test CI
+
+# 触发条件：推送代码或创建 PR 时自动运行
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+# 权限配置（可选，用于上传报告等）
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # 任务 1: 运行自动化测试
+  test:
+    name: 🚀 Run Tests
+    runs-on: ubuntu-latest  # 使用 Ubuntu 最新镜像
+    
+    steps:
+      # 步骤 1: 检出代码
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      # 步骤 2: 设置 Python 环境
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'  # 启用 pip 缓存，加速安装
+
+      # 步骤 3: 安装依赖
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium  # 只安装 Chromium，节省时间
+
+      # 步骤 4: 运行测试
+      - name: 🧪 Run UI & API Tests
+        run: |
+          pytest ui_tests/ api_tests/ \
+            --alluredir=./reports \
+            --headless \  # CI 环境使用无头模式
+            -v
+
+      # 步骤 5: 上传测试报告产物
+      - name: 📤 Upload Allure Report
+        if: always()  # 无论测试成败都上传
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: reports/
+          retention-days: 7  # 保留 7 天
+
+  # 任务 2: 部署报告到 GitHub Pages (可选)
+  deploy-report:
+    name: 🌐 Deploy Report
+    needs: test  # 依赖 test 任务完成
+    if: github.ref == 'refs/heads/main'  # 只在 main 分支部署
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      # 检出代码
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      # 下载测试报告产物
+      - name: 📥 Download Allure Report
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-report
+          path: ./reports
+
+      # 生成静态 HTML 报告
+      - name: 📊 Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: reports
+          allure_report: allure-report
+          allure_history: allure-history
+
+      # 部署到 GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
+          publish_branch: gh-pages

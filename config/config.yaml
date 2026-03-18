@@ -1,0 +1,8 @@
+base_url: "https://www.saucedemo.com/"
+login:
+  username: "standard_user"
+  password: "secret_sauce"
+
+api:
+  base_url: "https://fakestoreapi.com/"
+  timeout: 30

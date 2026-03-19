@@ -1,31 +1,29 @@
 import allure
 import pytest
+import sys
+import os
 from config.config_loader import load_config  # 假设你写了这个加载函数
+from page_objects.login_page import LoginPage
+
+# 确保能导入 config 模块
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 
 @allure.feature("用户模块")
 @allure.story("登录功能")
 def test_login_success(browser_context):
     # 1. 获取页面对象
-    page = browser_context.new_page()
+    page = browser_context
     
     # 2. 加载配置数据
     config = load_config() 
     username = config['login']['username']
     password = config['login']['password']
 
-    # 3. 执行操作并记录步骤
-    with allure.step("打开登录页面"):
-        page.goto("https://www.saucedemo.com/")
-    
-    with allure.step("输入用户名"):
-        page.locator("#user-name").fill(username)
-        
-    with allure.step("输入密码"):
-        page.locator("#password").fill(password)
-        
-    with allure.step("点击登录按钮"):
-        page.locator("#login-button").click()
-    
+    # 3. 创建登录页面对象并执行登录
+    login_page = LoginPage(page)
+    login_page.login(username, password)
+
     # 4. 断言
     with allure.step("验证登录成功"):
         # 断言 URL 是否包含 inventory

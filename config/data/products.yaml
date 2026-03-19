@@ -1,0 +1,37 @@
+# 商品测试数据
+products:
+  - id: 1
+    title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
+    price: 109.95
+    category: "men's clothing"
+  
+  - id: 5
+    title: "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet"
+    price: 695
+    category: "jewelery"
+  
+  - id: 10
+    title: "WD 2TB Elements Portable External Hard Drive - USB 3.0"
+    price: 109
+    category: "electronics"
+
+# 边界测试数据
+edge_cases:
+  - id: 99999
+    expected_status: 200
+    description: "不存在的商品 ID"
+  
+  - id: 0
+    expected_status: 200
+    description: "无效的商品 ID (0)"
+  
+  - id: -1
+    expected_status: 200
+    description: "负数商品 ID"
+
+# 分类测试数据
+categories:
+  - "electronics"
+  - "jewelery"
+  - "men's clothing"
+  - "women's clothing"

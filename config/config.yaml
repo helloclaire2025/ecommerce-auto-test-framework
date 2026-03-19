@@ -6,3 +6,5 @@ login:
 api:
   base_url: "https://fakestoreapi.com/"
   timeout: 30
+  headers:
+    Content-Type: "application/json"
